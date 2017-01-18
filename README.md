@@ -1,2 +1,2 @@
 # algorithm
-Some solutions
+Some solutions of some questions in Online Judge
