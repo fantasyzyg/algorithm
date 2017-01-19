@@ -1,0 +1,64 @@
+#include<iostream>
+using namespace std;
+
+struct BSTNode
+{
+	int data;
+	BSTNode *lchild, *rchild;
+};
+BSTNode *pre = NULL;
+
+void Insert(BSTNode * &BST, int value)
+{
+	if (BST == NULL)
+	{
+		BST = new BSTNode;
+		BST->data = value;
+		BST->lchild = BST->rchild = NULL;
+		if (pre == NULL)
+			cout << "-1" << endl;
+		else
+			cout << pre->data << endl;
+		return;
+	}
+	else if (BST->data < value) {
+		pre = BST;
+		Insert(BST->rchild, value);
+	}
+	else
+	{
+		pre = BST;
+		Insert(BST->lchild, value);
+	}
+	return;
+}
+
+void clean(BSTNode *&head)
+{
+	if (head != NULL)
+	{
+		clean(head->lchild);
+		clean(head->rchild);
+		delete head;
+	}
+	return;
+}
+
+int main()
+{
+	int N;
+	while (cin >> N)
+	{
+		int num;
+		BSTNode *head = NULL;
+		for (int i = 0;i < N;++i)
+		{
+			cin >> num;
+			Insert(head, num);
+		}
+		clean(head);
+		pre = NULL;
+	}
+
+	return 0;
+}
