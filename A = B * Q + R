@@ -1,0 +1,24 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	string str, ans;
+	int n;
+	cin >> str >> n;
+	int cnt = 0;
+	for (int i = 0;i < str.size();++i)
+	{
+		int num = cnt * 10 + (str[i] - '0');
+		ans += num / n + '0';
+		cnt = num %n;
+	}
+	int j = (ans[0] == '0') ? 1 : 0;
+	for (;j < ans.size();++j)
+		cout << ans[j];
+	cout << " " << cnt;
+
+	return 0;
+}
+//本题要求计算A/B，其中A是不超过1000位的正整数，B是1位正整数。你需要输出商数Q和余数R，使得A = B * Q + R成立。
