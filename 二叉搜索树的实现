@@ -1,0 +1,97 @@
+// 二叉搜索树的实现
+
+
+#include<iostream>
+using namespace std;
+struct node
+{
+	int val;
+	node *lch, *rch;
+};
+
+node * insert(node *p, int x)
+{
+	if (p == NULL)
+	{
+		node * q = new node;
+		q->val = x;
+		q->lch = q->rch = NULL;
+		return q;
+	}
+	else
+	{
+		if (p->val < x)
+			p->rch = insert(p->rch, x);
+		else
+			p->lch = insert(p->lch, x);
+		return p;
+	}
+}
+
+void insert1(node *&p, int x)
+{
+	if (p == NULL)
+	{
+		p = new node;
+		p->val = x;
+		p->lch = p->rch = NULL;
+		return;
+	}
+	else if (p->val < x)
+		insert1(p->rch, x);
+	else
+		insert1(p->lch, x);
+
+}
+
+// 查找数值X
+bool find(node *p, int x)
+{
+	if (p == NULL)
+		return false;
+	else if (p->val == x)
+		return true;
+	else if (p->val > x)
+		return find(p->lch, x);
+	else
+		return find(p->rch, x);
+
+}
+
+
+//删除数值X
+node * remove(node *p, int x)
+{
+	if (p == NULL)
+		return NULL;
+	else if (x < p->val)
+		p->lch = remove(p->lch, x);
+	else if (x > p->val)
+		p->rch = remove(p->rch, x);
+	else if (p->lch == NULL)
+	{
+		node *q = p->rch;
+		delete p;
+		return q;
+	}
+	else if (p->lch->rch == NULL)
+	{
+		node *q = p->lch;
+		q->rch = p->rch;
+		delete p;
+		return q;
+	}
+	else
+	{
+		node *q;
+		for (q = p->lch;q->rch->rch != NULL;q = q->rch);
+		node *r = q->rch;
+		q->rch = r->lch;
+		r->lch = p->lch;
+		r->rch = p->rch;
+		delete p;
+		return r;
+	}
+
+	return p;
+}
