@@ -1,0 +1,77 @@
+//题目要求输入n个整数（可以重复），然后再从小到大排列，然后找出第k个小数来，重复的算为一个
+
+//我自己的解法
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+	int n;
+	while (cin >> n)
+	{
+		int num, k;
+		vector<int> vec;
+		for (int i = 0;i < n;++i)
+		{
+			cin >> num;
+			vec.push_back(num);
+		}
+		sort(vec.begin(), vec.end());
+		cin >> k;
+		if (k == 1)
+		{
+			cout << vec[0] << endl;
+			continue;
+		}
+		int a = 1;
+		for (int i = 1;i < vec.size();++i)
+		{
+			if (vec[i] > vec[i - 1])
+			{
+				++a;
+				if (a == k) {
+					cout << vec[i] << endl;
+					break;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+//在网上看到另一个解法
+#include<iostream>
+using namespace std;
+int main()
+    {
+    int n;
+    int i,j,k,m;
+    while(cin>>n)
+        {
+        int arr[101000]={0};
+        for(i=0;i<n;i++)
+            {
+            cin>>m;
+            arr[m]=1;
+        }
+        cin>>k;
+        j=1;
+        for(i=0;i<101000;i++)
+            {
+            if(arr[i]==1)
+                {
+                if(j==k){
+                    cout<<i<<endl;
+                    break;
+                }else
+                    {
+                    j++;
+                }
+            }
+        }
+    }
+}
+
+//他主要是把输入的数据映射到一个很大的数组，值置为1，最后遍历这个数组，遇到1值就使j+1，直到k=j停止
