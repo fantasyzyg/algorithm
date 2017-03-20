@@ -1,0 +1,48 @@
+//归并排序
+void Merge(int *A, int p, int q, int r)
+{
+	int n1 = q - p + 1;
+	int n2 = r - q;
+	int* L = new int[n1];
+	int* R = new int[n2];
+
+	for (int i = 0;i < n1;++i)
+		L[i] = A[p + i];
+	for (int i = 0;i < n2;++i)
+		R[i] = A[q + 1 + i];
+
+	int i, j, k;
+	i = j = k = 0;
+	while (i < n1 && j < n2)
+	{
+		if (L[i] < R[j])
+		{
+			A[p + k] = L[i];
+			++i;
+		}
+		else
+		{
+			A[p + k] = R[j];
+			++j;
+		}
+		++k;
+	}
+	while (i < n1)
+		A[p + (k++)] = L[i++];
+	while (j < n2)
+		A[p + (k++)] = R[j++];
+
+	delete[] L;
+	delete[] R;
+}
+
+void Merge_sort(int *A, int p, int r)
+{
+	if (p < r)
+	{
+		int q = (p + r) / 2;
+		Merge_sort(A, p, q);
+		Merge_sort(A, q + 1, r);
+		Merge(A, p, q, r);
+	}
+}
