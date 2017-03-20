@@ -1,4 +1,4 @@
-//插入排序
+//插入排序（升序）
 void Insertion_sort(int * A, int n)
 {
 	for (int i = 1;i < n;++i)
