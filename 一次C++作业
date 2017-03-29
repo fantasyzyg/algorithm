@@ -1,0 +1,72 @@
+#include<iostream>
+using namespace std;
+
+//1.  定义人民币类RMB，包含：
+//私有数据成员    int yuan（元）、int jiao（角）、int fen（分）、bool mark（标志，表示正、负数）
+//成员函数            用（元，角，分，标志）构造RMB对象
+//用double数据构造RMB对象
+//类型转换，把RMB对象转换为double值
+//友元函数            重载 << ，以“元角分”形式输出RMB对象值
+//重载 >> ，以“元角分”形式输入RMB对象值
+
+//此处定义class RMB
+class RMB
+{
+	friend istream &operator >> (istream& input, RMB& r);
+	friend ostream& operator<<(ostream& output, const RMB &r);
+public:
+	RMB(){}
+	RMB(double money)
+	{
+		if (money < 0)
+		{
+			mark = 1;
+			money = -money;
+		}
+		yuan = int(money);
+		money = (money - int(money)) * 10;
+		jiao = int(money);
+		money = (money - int(money)) * 10;
+		fen = int(money);
+	}
+
+	operator double()
+	{
+		double money =  yuan + jiao*0.1 + fen*0.01;
+		return mark == 1 ? -money : money;
+	}
+	
+private:
+	int yuan;
+	int jiao;
+	int fen;
+	bool mark = 0;
+};
+
+istream &operator >> (istream& input, RMB& r)
+{
+	input >> r.yuan >> r.jiao >> r.fen;
+	return input;
+}
+
+ostream& operator<<(ostream& output, const RMB &r)
+{
+	if (r.mark == 1)
+		output << '-';
+	output << r.yuan << "元" << r.jiao << "角" << r.fen << "分";
+
+	return output;
+}
+int main()
+{
+	RMB a, b;
+	double c;
+	cout << "a :\n";  cin >> a;
+	cout << "b :\n";  cin >> b;
+	cout << "c :\n";  cin >> c;
+	cout << "a = " << a << "\tb = " << b << "\tc = " << RMB(c) << endl;
+	cout << "a + c = " << RMB(a + c) << endl;
+	cout << "a - b = " << RMB(a - b) << endl;
+	cout << "b * 2 = " << RMB(b * 2) << endl;
+	cout << "a * 0.5 = " << RMB(a*0.5) << endl;
+}
