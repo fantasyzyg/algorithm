@@ -1,0 +1,102 @@
+#include<iostream>
+#include<limits>
+#define N 100
+using namespace std;
+
+
+//这只是一个普通的递归方法求解，但是时间复杂度为2的n次方
+int CUT_ROD(int p[], int n)
+{
+	if (n == 0)
+		return 0;
+
+	int q = numeric_limits<int>::min();
+
+	for (int i = 1;i <= n;++i) {              //q[i]保存价格表，这是一个n叉树
+		int temp = p[i] + CUT_ROD(p, n - i);
+
+		q = q > temp ? q : temp;
+	}
+
+	return q;
+}
+
+//利用动态规划,这是自上向下的方法
+int MEMOIZED_CUT_ROD(int p[], int n) {
+	int* r = new int[n + 1];         //数组r用于保存长度为i时的最大收益
+	for (int i = 0;i < n + 1;++i)
+		r[i] = numeric_limits<int>::min();
+
+	return MEMOIZED_CUT_ROD_AUX(p, n, r);
+}
+
+int MEMOIZED_CUT_ROD_AUX(int p[], int n, int r[]) {
+	if (r[n] >= 0)
+		return r[n];
+
+	if (n == 0)
+		return 0;
+
+	int q = numeric_limits<int>::min();
+	for (int i = 1;i <= n;++i) {
+		int temp = p[i] + MEMOIZED_CUT_ROD_AUX(p, n - i, r);
+		q = q > temp ? q : temp;
+	}
+
+	return r[n] = q;
+}
+
+//但是自底向上的方法更加简单
+int BOTTOM_UP_CUT_ROD(int p[], int n) {
+	//let r[0...n]be a new array
+	int* r = new int[n + 1];
+	r[0] = 0; //表示长度为0时收益为0
+
+	for (int j = 1;j <= n;++j) {
+		int q = numeric_limits<int>::min();
+
+		for (int i = 1;i <= j;i++)
+			q = q > (p[i] + r[j - i]) ? q : (p[i] + r[j - i]);
+
+		//每一个问题都可以分解为较小的子问题来求解，而子问题已经被解决
+
+		r[j] = q;
+	}
+
+	return r[n];
+}
+
+
+//前文虽然给出了钢条切割问题的动态规划算法返回最优解的收益值，但是没有返回解本身（一个长度列表，给出切割后每段钢条的长度）
+
+void EXTENDED_BOTTOM_UP_CUT_ROD(int p[], int n, int* &r, int* &s) {
+	r = new int[n + 1];       //r[]表示长度为i时最大收益
+	s = new int[n + 1];       //s[]表示长度为i时收益最大时第一段的切割长度
+
+	r[0] = s[0] = 0;
+
+	for (int i = 1;i <= n;++n) {
+		int q = numeric_limits<int>::min();
+
+		for (int j = 1;j <= i;++j) {
+			if (q < p[j] + r[i - j]) {
+				q = p[j] + r[i - j];
+				s[i] = j;
+			}
+		}
+
+		r[i] = q;
+	}
+}
+
+
+//输出长度为n时的切割方案
+void PRINT_CUT_ROD_SOLUTION(int p[], int n) {
+	int* r, *s;
+	EXTENDED_BOTTOM_UP_CUT_ROD(p, n, r, s);
+
+	while (n > 0) {
+		cout << s[n] << " ";
+		n = n - s[n];
+	}
+}
