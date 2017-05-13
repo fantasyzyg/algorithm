@@ -1,0 +1,62 @@
+#include<iostream>
+using namespace std;
+
+/*
+矩阵链乘法问题（matrix_chain multiplication problem)
+对于一系列矩阵<A1, A2, ..., An>
+这一系列的矩阵对应的下标序列 p = <p0, p1, ..., pn>
+
+
+发现一个小问题，int** p是建立动态数组的变量，int a[m][n]中的a是int (*)[n]的变量，列的维数已经固定
+*/
+
+
+void MATRIX_CHAIN_ORDER(int p[], int n, int m[][7] , int s[][7]) { // m 和 n都是(n+1)*(n+1)的二维数组， n是p数组的长度-1
+	for (int i = 1;i <= n;++i)
+		m[i][i] = 0;
+
+	for (int l = 2;l <= n;++l) {
+		
+		for (int i = 1;i <= n - l + 1;++i) {
+			int j = i + l - 1;
+			m[i][j] = numeric_limits<int>::max();
+
+			for (int k = i;k < j;++k) {
+				int q = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+				if (q < m[i][j]) {
+					m[i][j] = q;
+					s[i][j] = k;
+				}
+			}
+		}
+	}
+
+}
+
+
+void PRINT_OPTIMAL_PARENS(int s[][7], int i, int j) {
+	if (i == j)
+		cout << "A" << i;
+	else {
+		cout << "(";
+		PRINT_OPTIMAL_PARENS(s, i, s[i][j]);
+		PRINT_OPTIMAL_PARENS(s, s[i][j] + 1, j);
+		cout << ")";
+	}
+}
+
+
+int main()
+{
+	int p[7] = { 5, 10, 3, 12, 5, 50, 6 };
+	int m[7][7];
+	int s[7][7];
+	
+	MATRIX_CHAIN_ORDER(p, 6, m, s);
+
+	PRINT_OPTIMAL_PARENS(s, 1, 6);
+
+	cout << endl;
+
+	return 0;
+}
