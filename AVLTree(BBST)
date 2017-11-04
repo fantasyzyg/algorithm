@@ -83,7 +83,7 @@ int AVLTree<T>::height(AVLTreeNode<T>* pnode) const
 		return pnode->height;
 	}
 
-	return 0;
+	return -1;
 }
 
 template<typename T>
