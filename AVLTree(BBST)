@@ -350,10 +350,13 @@ AVLTreeNode<T>* AVLTree<T>::remove(AVLTreeNode<T>*& pnode, T pdel)
 					pnode = pnode->lchild;
 				if (pnode->rchild && !pnode->lchild)
 					pnode = pnode->rchild;
-				if (!pnode->lchild && !pnode->rchild)
+				if (!pnode->lchild && !pnode->rchild) {
 					pnode = nullptr;
+					delete t;
+					return pnode;
+				}
 				delete t;
-				return pnode;
+				t = nullptr;
 			}
 		}
 		else if (pdel < pnode->key) {
