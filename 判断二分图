@@ -1,0 +1,39 @@
+//判断二分图
+class TwoColor1 {
+	private boolean[] marked;
+	private boolean[] color;
+	private boolean isTwoColorable = true;
+	
+	public TwoColor1(Graph G) {
+		marked = new boolean[G.V()];
+		color = new boolean[G.V()];
+		
+		for (int s = 0;s < G.V();++s)
+			if (!marked[s])
+				dfs(G, s);
+	}
+	
+	
+	private void dfs(Graph G, int s) {
+		marked[s] = true;
+		
+		for (int v: G.adj(s)) {
+			if (!marked[v]) {
+//				if (color[s] == true)
+//					color[v] = false;
+//				else
+//					color[v] = true;
+				
+				color[v] = !color[s];
+				
+				dfs(G, v);
+			}
+			else if (color[v] == color[s])
+				isTwoColorable = false;
+		}
+	}
+	
+	public boolean isBipartite() {
+		return isTwoColorable;
+	}
+}
