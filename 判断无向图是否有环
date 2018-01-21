@@ -1,0 +1,129 @@
+class Cycle1 {     //在没有自环和平行边的前提下
+	private boolean hasCycle;
+	private boolean[] marked;
+	
+	public Cycle1(Graph G) {
+		marked = new boolean[G.V()];
+		
+		for (int s = 0;s < G.V();++s) {
+			if (!marked[s])
+				dfs(G, s, s);      //这里主要是防止多个连通分量
+		}
+	}
+	
+	
+	private void dfs(Graph G, int v, int u) {
+		marked[v] = true;
+		
+		for (int w: G.adj(v)) {
+			if (!marked[w])   //如果没有被标记的话，就继续构建这棵树
+				dfs(G, w, v);
+			else if (w != u)      //如果已经被标记了，并且这个被标记的点不是父节点，则可以断定这是有环。
+				hasCycle = true;
+		}
+	}
+	
+	public boolean hasCycle() {
+		return hasCycle;
+	}
+	
+}
+
+class DepthFirstPaths1 {
+	private boolean[] marked;
+	private int[] edgeTo;
+	private final int s;          //s 代表深度优先遍历的起点也是树根
+	
+	public DepthFirstPaths1(Graph G, int s) {
+		this.s = s;
+		marked = new boolean[G.V()];
+		edgeTo = new int[G.V()];
+		dfs(G, s);
+	}
+	
+	
+	private void dfs(Graph G, int s) {
+		marked[s] = true;
+		
+		for (int v: G.adj(s)) {
+			if (!marked[v]) {
+				edgeTo[v] = s;
+				dfs(G, v);
+			}
+		}
+	}
+	
+	
+	public boolean hasPath(int v) {
+		return marked[v];
+	}
+	
+	public Iterable<Integer> pathTo(int v) {
+		if (!hasPath(v))
+			return null;
+		
+		//利用stack来找路径。反向找。
+		Stack<Integer> path = new Stack<>();
+		for (int x = v;x != s;x = edgeTo[x]) {
+			path.push(x);
+		}
+		
+		path.push(s);
+		
+		return path;
+	}
+	
+}
+
+class BFS {
+	private boolean[] marked;
+	private int[] edgeTo;
+	private final int s;
+	
+	public BFS(Graph G, int s) {
+		this.s = s;
+		marked = new boolean[G.V()];
+		edgeTo = new int[G.V()];
+		
+		bfs(G, s);
+	}
+	
+	private void bfs(Graph G, int s) {
+		Queue<Integer> queue = new Queue<>();
+		
+		queue.enqueue(s);
+		marked[s] = true;
+		while (!queue.isEmpty()) {
+			int v = queue.dequeue();
+			
+			for (int w: G.adj(v)) {
+				if (!marked[w]) {
+					marked[w] = true;
+					queue.enqueue(w);
+					edgeTo[w] = v;
+				}
+			}
+		}
+	}
+	
+	public boolean hasPathTo(int v) {
+		return marked[v];
+	}
+	
+	public Iterable<Integer> pathTo(int v) {
+		if (!hasPathTo(v))
+			return null;
+		
+		Stack<Integer> path = new Stack<>();
+		while (v != s) {
+			path.push(v);
+			v = edgeTo[v];
+		}
+		
+		path.push(s);
+		
+		return path;
+	}
+	
+	
+}
