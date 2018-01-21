@@ -31,6 +31,8 @@ void unite(int x, int y)
 
 	if (x == y)
 		return;
+		
+	//这里存在三种情况，只有在两棵树高度相同时才会更新某一棵树的高度。
 	if (rank[x] < rank[y])
 		par[x] = y;
 	else
@@ -47,3 +49,6 @@ bool same(int x, int y)
 {
 	return find(x) == find(y);
 }
+
+//并查集实现其实也是一棵树，我们可以把一些分为几棵树组成一个森林，然后我们可以合并其中的某些树，过程就是把一棵树的树根归并为另一棵树的子节点。
+//然后再更新树的高度。
